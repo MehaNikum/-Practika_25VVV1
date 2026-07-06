@@ -61,3 +61,15 @@ class App:
         tk.Label(mid_frame, text="Отсортированный массив:").grid(row=0, column=1, sticky="w")
         self.sorted_text = scrolledtext.ScrolledText(mid_frame, width=60, height=8)
         self.sorted_text.grid(row=1, column=1, padx=5, pady=5)
+
+        # Кнопка сортировки
+        self.sort_btn = tk.Button(mid_frame, text="Выполнить сортировку", command=self.sort)
+        self.sort_btn.grid(row=2, column=0, columnspan=2, pady=10)
+
+        # Статистика
+        self.stats_label = tk.Label(mid_frame, text="Статистика: ожидание...")
+        self.stats_label.grid(row=3, column=0, columnspan=2, pady=5)
+
+        # Сохранение отчёта
+        self.save_report_btn = tk.Button(mid_frame, text="Сохранить отчёт", command=self.save_report, state=tk.DISABLED)
+        self.save_report_btn.grid(row=4, column=0, columnspan=2, pady=5)
