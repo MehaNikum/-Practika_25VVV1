@@ -121,3 +121,48 @@ class App:
             messagebox.showinfo("Успех", f"Массив сохранён в {filename}")
         else:
             messagebox.showerror("Ошибка", "Не удалось сохранить файл.")
+    def sort(self):
+        if not self.arr:
+            messagebox.showerror("Ошибка", "Массив пуст.")
+            return
+        # Собственная сортировка
+        start = time.perf_counter()
+        self.sorted_arr, self.comparisons, self.swaps = selection_sort(self.arr)
+        self.elapsed = time.perf_counter() - start
+
+        # Стандартная сортировка
+        start = time.perf_counter()
+        _ = sorted(self.arr)
+        self.std_elapsed = time.perf_counter() - start
+
+        self.display_array(self.sorted_arr, self.sorted_text)
+        self.stats_label.config(
+            text=f"Сравнений: {self.comparisons}, Перестановок: {self.swaps}, "
+                 f"Время (собств.): {self.elapsed:.6f} с, Время (sorted): {self.std_elapsed:.6f} с"
+        )
+        self.is_sorted = True
+        self.save_report_btn.config(state=tk.NORMAL)
+
+    def save_report(self):
+        if not self.is_sorted:
+            messagebox.showerror("Ошибка", "Сначала выполните сортировку.")
+            return
+        filename = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
+        if not filename:
+            return
+        if write_results(filename, self.arr, self.sorted_arr, self.comparisons, self.swaps, self.elapsed, self.std_elapsed):
+            messagebox.showinfo("Успех", f"Отчёт сохранён в {filename}")
+        else:
+            messagebox.showerror("Ошибка", "Не удалось сохранить отчёт.")
+
+    def display_array(self, arr, widget):
+        widget.delete(1.0, tk.END)
+        if len(arr) > 0:
+            widget.insert(tk.END, ' '.join(str(x) for x in arr))
+        else:
+            widget.insert(tk.END, "(пусто)")
+
+def run_gui():
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()
