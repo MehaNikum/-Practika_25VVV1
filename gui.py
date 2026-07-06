@@ -43,3 +43,21 @@ class App:
         self.max_entry = tk.Entry(top_frame, width=10)
         self.max_entry.grid(row=0, column=5, padx=5)
         self.max_entry.insert(0, "100")
+
+        self.gen_btn = tk.Button(top_frame, text="Сгенерировать", command=self.generate)
+        self.gen_btn.grid(row=0, column=6, padx=5)
+
+        self.load_btn = tk.Button(top_frame, text="Загрузить из CSV", command=self.load)
+        self.load_btn.grid(row=0, column=7, padx=5)
+
+        self.save_btn = tk.Button(top_frame, text="Сохранить в CSV", command=self.save_csv)
+        self.save_btn.grid(row=0, column=8, padx=5)
+
+        # Массивы
+        tk.Label(mid_frame, text="Исходный массив:").grid(row=0, column=0, sticky="w")
+        self.orig_text = scrolledtext.ScrolledText(mid_frame, width=60, height=8)
+        self.orig_text.grid(row=1, column=0, padx=5, pady=5)
+
+        tk.Label(mid_frame, text="Отсортированный массив:").grid(row=0, column=1, sticky="w")
+        self.sorted_text = scrolledtext.ScrolledText(mid_frame, width=60, height=8)
+        self.sorted_text.grid(row=1, column=1, padx=5, pady=5)
