@@ -73,3 +73,51 @@ class App:
         # Сохранение отчёта
         self.save_report_btn = tk.Button(mid_frame, text="Сохранить отчёт", command=self.save_report, state=tk.DISABLED)
         self.save_report_btn.grid(row=4, column=0, columnspan=2, pady=5)
+    def generate(self):
+        try:
+            size = int(self.size_entry.get())
+            min_val = int(self.min_entry.get())
+            max_val = int(self.max_entry.get())
+            if size <= 0:
+                messagebox.showerror("Ошибка", "Размер должен быть положительным.")
+                return
+            if min_val > max_val:
+                messagebox.showerror("Ошибка", "Минимум не может быть больше максимума.")
+                return
+            self.arr = [random.randint(min_val, max_val) for _ in range(size)]
+            self.display_array(self.arr, self.orig_text)
+            self.sorted_text.delete(1.0, tk.END)
+            self.stats_label.config(text="Статистика: массив сгенерирован, сортировка не выполнена")
+            self.is_sorted = False
+            self.save_report_btn.config(state=tk.DISABLED)
+        except ValueError:
+            messagebox.showerror("Ошибка", "Введите корректные целые числа.")
+
+    def load(self):
+        filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        if not filename:
+            return
+        arr = read_csv(filename)
+        if arr is None:
+            messagebox.showerror("Ошибка", "Не удалось прочитать файл или неверный формат.")
+            return
+        if len(arr) == 0:
+            messagebox.showwarning("Предупреждение", "Файл пуст.")
+        self.arr = arr
+        self.display_array(self.arr, self.orig_text)
+        self.sorted_text.delete(1.0, tk.END)
+        self.stats_label.config(text="Статистика: массив загружен, сортировка не выполнена")
+        self.is_sorted = False
+        self.save_report_btn.config(state=tk.DISABLED)
+
+    def save_csv(self):
+        if not self.arr:
+            messagebox.showerror("Ошибка", "Нет данных для сохранения.")
+            return
+        filename = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+        if not filename:
+            return
+        if write_csv(filename, self.arr):
+            messagebox.showinfo("Успех", f"Массив сохранён в {filename}")
+        else:
+            messagebox.showerror("Ошибка", "Не удалось сохранить файл.")
